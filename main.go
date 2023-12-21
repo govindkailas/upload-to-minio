@@ -17,7 +17,7 @@ import (
 func main() {
 
 	ctx := context.Background()
-	endpoint := os.Getenv("MINIO_ENDPOINT")
+	endpoint := os.Getenv("MINIO_ENDPOINT") // based on what you defined at https://github.com/govindkailas/upload-to-minio/blob/91913c2f84863f3f172f69ea0fab051d6d3601c0/k8s/minio.yaml#L94 
 	accessKeyID := os.Getenv("MINIO_ACCESSKEY")
 	secretAccessKey := os.Getenv("MINIO_SECRETKEY")
 	useSSL := false
