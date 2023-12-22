@@ -55,3 +55,32 @@ File type is png
 
 Let's check if the file is present in the bucket: 
 ![minio bucket list](minio_testbucket.jpg)
+
+
+The go-app can also be deployed on Kubernetes, take a look at [upload-to-minio.yaml](k8s/upload-to-minio.yaml).
+This will get deployed on the same namespace `minio` so the app can talk to minio directly using the service name. Also, make changes to the service type if needed, the default is LoadBalancer
+```
+k apply -f k8s/upload-to-minio.yaml 
+deployment.apps/upload-to-minio unchanged
+service/upload-to-minio-svc created
+```
+
+Now you can try uploading to minio using the go-apps Loadbalancer IP
+```
+$ curl http://10.xx.1xx.xx:8080/upload -F 'file=@teams_error.png' -vv
+*   Trying 10.xx.1xx.xx:8080...
+* Connected to 10.xx.1xx.xx (10.xx.1xx.xx) port 8080
+> POST /upload HTTP/1.1
+> Host: 10.xx.1xx.xx:8080
+> User-Agent: curl/8.4.0
+> Accept: */*
+> Content-Length: 84956
+> Content-Type: multipart/form-data; boundary=------------------------QGIGjSC2igQc9JpCkj65MV
+>
+* We are completely uploaded and fine
+< HTTP/1.1 200 OK
+< Date: Fri, 22 Dec 2023 00:41:53 GMT
+< Content-Length: 0
+<
+* Connection #0 to host 10.xx.1xx.xx left intact
+```
