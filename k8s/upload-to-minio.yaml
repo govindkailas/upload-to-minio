@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: upload-to-minio
+  namespace: minio
+  labels:
+    app: upload-to-minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: upload-to-minio
+  template:
+    metadata:
+      labels:
+        app: upload-to-minio
+    spec:
+      containers:
+        - name: upload-to-minio
+          image: ghcr.io/govindkailas/upload-to-minio:main
+          imagePullPolicy: Always
+          env:
+            - name: MINIO_ENDPOINT
+              value: 'minio:9000' # servicename:port, since the go app is also deployed on the same namespace
+            - name: MINIO_ACCESSKEY
+              value: 'minio'
+            - name: MINIO_SECRETKEY
+              value: 'minio123'
+          resources:
+            limits:
+              cpu: 100m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name:  upload-to-minio-svc
+  namespace: minio
+spec:
+  selector:
+    app: upload-to-minio
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: LoadBalancer # Can be changed to NodePort or ClusterIP based on your need
