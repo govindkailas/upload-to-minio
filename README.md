@@ -1,3 +1,6 @@
+[![Dependabot auto-merge](https://github.com/govindkailas/upload-to-minio/actions/workflows/dependabot-auto-merge.yml/badge.svg)](https://github.com/govindkailas/upload-to-minio/actions/workflows/dependabot-auto-merge.yml)
+[![Docker](https://github.com/govindkailas/upload-to-minio/actions/workflows/docker-publish.yml/badge.svg)](https://github.com/govindkailas/upload-to-minio/actions/workflows/docker-publish.yml)
+
 # upload-to-minio
 
 ## Getting started 
