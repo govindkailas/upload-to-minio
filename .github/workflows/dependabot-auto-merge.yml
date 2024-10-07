@@ -4,11 +4,13 @@ on: pull_request
 permissions:
   contents: write
   pull-requests: write
+  repository-projects: write
+  issues: write
 
 jobs:
   dependabot:
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: github.event.pull_request.user.login == 'dependabot[bot]' && github.repository == 'govindkailas/upload-to-minio'
     steps:
       - name: Dependabot metadata
         id: metadata
