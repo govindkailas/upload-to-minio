@@ -1,24 +1,26 @@
 name: Dependabot auto-approve
-on: 
-  pull_request:
-  workflow_dispatch:
 
-permissions:
-  pull-requests: write
-  contents: write
-  
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+
 jobs:
-  dependabot:
+  auto-merge:
     runs-on: ubuntu-latest
-    if: ${{ github.actor == 'dependabot[bot]' || github.actor == github.repository_owner }}
+
     steps:
-      - name: Dependabot metadata
-        id: metadata
-        uses: dependabot/fetch-metadata@v2.2.0
-        with:
-          github-token: "${{ secrets.GITHUB_TOKEN }}"
-      - name: Enable auto-merge for Dependabot PRs
-        run: gh pr merge --auto --rebase "$PR_URL"
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Fetch Dependabot PR metadata
+        id: dependabot
+        uses: dependabot/fetch-metadata@v2.3.0
+
+      - name: Enable auto-merge
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        run: |
+          gh pr merge --auto --rebase "${{ github.event.pull_request.html_url }}"
         env:
-          PR_URL: ${{github.event.pull_request.html_url}}
-          GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
